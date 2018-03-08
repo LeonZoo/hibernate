@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+ 
+<hibernate-mapping package="com.zhao.pojo">
+    <class name="Product" table="product_">
+        <id name="id" column="id">
+            <generator class="native">
+            </generator>
+        </id>
+        <!-- 增加一个version字段，用于版本信息控制。这就是乐观锁的核心机制。 -->
+        <!-- 比如session1获取product1的时候，version=1。 那么session1更新product1的时候，就需要确保version还是1才可以进行更新，并且更新结束后，把version改为2。 -->
+        <!-- 注意： version元素必须紧跟着id后面，否则会出错。 -->
+        <version name="version" column="ver" type="int"></version>
+        <property name="name" />
+        <property name="price" />
+        <many-to-one name="category" class="Category" column="cid"></many-to-one>
+        
+        <set name="users" table="user_product" lazy="false">
+        	<key column="pid"/>
+        	<many-to-many column="uid" class="User"></many-to-many>
+        </set>
+    </class>
+     
+</hibernate-mapping>
